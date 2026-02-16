@@ -11,6 +11,6 @@ module.exports = {
 
   
   jsxSingleQuote: false,
-  jsxBracketSameLine: false,
+  bracketSameLine: false,
   htmlWhitespaceSensitivity: "ignore",
 }
