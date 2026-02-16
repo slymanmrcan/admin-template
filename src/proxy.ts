@@ -6,7 +6,7 @@ const protectedRoutes = ["/dashboard"]
 // Auth route'ları (login olmuş kullanıcı giremez)
 const authRoutes = ["/login", "/register", "/forgot-password"]
 
-export function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   if (process.env.NEXT_PUBLIC_DISABLE_MIDDLEWARE === "true") {
     return NextResponse.next()
   }

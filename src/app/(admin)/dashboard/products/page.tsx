@@ -5,7 +5,14 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Plus, Search, MoreHorizontal } from "lucide-react"
 import {
   DropdownMenu,
@@ -59,9 +66,7 @@ export default function ProductsPage() {
       return products
     }
 
-    return products.filter((product) =>
-      product.name.toLowerCase().includes(search.toLowerCase())
-    )
+    return products.filter((product) => product.name.toLowerCase().includes(search.toLowerCase()))
   }, [search])
 
   return (
