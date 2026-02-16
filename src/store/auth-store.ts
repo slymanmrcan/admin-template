@@ -11,6 +11,7 @@ interface AuthState {
   login: (credentials: LoginCredentials) => Promise<void>
   logout: () => void
   updateUser: (user: User) => void
+  setToken: (token: string | null) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -23,6 +24,7 @@ export const useAuthStore = create<AuthState>()(
 
       // Kullanıcı bilgilerini güncelle (Token değişmeden)
       updateUser: (user) => set({ user }),
+      setToken: (token) => set({ token, isAuthenticated: Boolean(token) }),
 
       login: async (credentials) => {
         set({ isLoading: true })

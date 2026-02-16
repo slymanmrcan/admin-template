@@ -6,6 +6,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
 type RequestOptions = {
   headers?: Record<string, string>
   noAuth?: boolean
+  retry?: boolean
+  credentials?: RequestCredentials
 }
 
 class ApiError extends Error {
@@ -19,11 +21,82 @@ class ApiError extends Error {
   }
 }
 
+let refreshPromise: Promise<string | null> | null = null
+
+async function refreshToken(): Promise<string | null> {
+  if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true") {
+    const token = useAuthStore.getState().token
+    const user = useAuthStore.getState().user
+    if (user) {
+      useAuthStore.getState().updateUser(user)
+    }
+    return token
+  }
+
+  const existingToken = useAuthStore.getState().token
+  const refreshHeaders: Record<string, string> = {
+    "Content-Type": "application/json",
+  }
+
+  if (existingToken) {
+    refreshHeaders["Authorization"] = `Bearer ${existingToken}`
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: "POST",
+      headers: refreshHeaders,
+      credentials: "include",
+    })
+
+    if (!res.ok) {
+      return null
+    }
+
+    const data = await res.json()
+    const newToken = data?.data?.token ?? data?.token ?? null
+    const refreshedUser = data?.data?.user ?? data?.user ?? null
+
+    if (newToken) {
+      useAuthStore.getState().setToken(newToken)
+      if (typeof document !== "undefined") {
+        document.cookie = `token=${newToken}; path=/; max-age=86400`
+      }
+      if (refreshedUser) {
+        useAuthStore.getState().updateUser(refreshedUser)
+      } else {
+        try {
+          const meRes = await fetch(`${API_BASE_URL}/auth/me`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+            credentials: "include",
+          })
+          if (meRes.ok) {
+            const meData = await meRes.json()
+            const meUser = meData?.data ?? meData?.user ?? null
+            if (meUser) {
+              useAuthStore.getState().updateUser(meUser)
+            }
+          }
+        } catch {
+          return newToken
+        }
+      }
+    }
+
+    return newToken
+  } catch {
+    return null
+  }
+}
+
 async function request<T>(
   endpoint: string,
   options: RequestInit & RequestOptions = {}
 ): Promise<T> {
-  const { headers: customHeaders, noAuth, ...restOptions } = options
+  const { headers: customHeaders, noAuth, retry, ...restOptions } = options
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -53,9 +126,20 @@ async function request<T>(
     if (!res.ok) {
       // Handle 401 Unauthorized
       if (res.status === 401) {
+        if (!noAuth && !retry) {
+          if (!refreshPromise) {
+            refreshPromise = refreshToken()
+          }
+
+          const newToken = await refreshPromise
+          refreshPromise = null
+
+          if (newToken) {
+            return request<T>(endpoint, { ...options, retry: true })
+          }
+        }
+
         useAuthStore.getState().logout()
-        // Optional: Redirect to login page
-        // window.location.href = "/login"
         throw new ApiError(401, "Oturum süresi doldu. Lütfen tekrar giriş yapın.")
       }
 

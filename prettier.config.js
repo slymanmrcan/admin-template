@@ -7,5 +7,10 @@ module.exports = {
   bracketSpacing: true,
   arrowParens: "always",
   endOfLine: "lf",
-  plugins: ["prettier-plugin-yaml"]
+  plugins: ["prettier-plugin-yaml"],
+
+  
+  jsxSingleQuote: false,
+  jsxBracketSameLine: false,
+  htmlWhitespaceSensitivity: "ignore",
 }

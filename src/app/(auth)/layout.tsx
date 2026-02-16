@@ -1,3 +1,6 @@
+import Image from "next/image"
+import { siteConfig } from "@/config"
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
@@ -6,12 +9,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="max-w-md text-center space-y-6">
           <div className="flex items-center justify-center">
             <div className="h-16 w-16 rounded-2xl bg-primary-foreground/20 flex items-center justify-center">
-              <span className="text-3xl font-bold text-primary-foreground">A</span>
+              <Image src="/logo.png" alt={siteConfig.name} width={40} height={40} />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-primary-foreground">Admin Panel</h1>
+          <h1 className="text-3xl font-bold text-primary-foreground">{siteConfig.name}</h1>
           <p className="text-primary-foreground/70 text-lg">
-            Modern, ölçeklenebilir ve güvenli admin panel şablonu.
+            {siteConfig.description}
           </p>
         </div>
       </div>

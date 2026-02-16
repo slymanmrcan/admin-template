@@ -1,6 +1,6 @@
-# Admin Panel Template
+# Opsboard
 
-Next.js App Router tabanlı, React Query + Zustand + Shadcn/UI altyapısı olan genel amaçlı admin panel şablonu.
+Next.js App Router tabanlı, React Query + Zustand + Shadcn/UI altyapısı ile operasyon yönetimi odaklı admin panel.
 
 ## Hızlı Başlangıç
 
@@ -65,3 +65,4 @@ NEXT_PUBLIC_DISABLE_MIDDLEWARE=true
 - `docs/REACT_QUERY.md`
 - `docs/STATE_MANAGEMENT.md`
 - `docs/FORM_TEMPLATES.md`
+- `docs/ONBOARDING.md`

@@ -2,10 +2,10 @@
 // Change these values when starting a new project
 
 export const siteConfig = {
-  name: "Admin Panel",
-  description: "Modern admin dashboard template",
+  name: "Opsboard",
+  description: "Operasyonları tek ekranda yöneten modern admin panel",
   url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-  locale: "en",
+  locale: "tr",
 } as const
 
 export type SiteConfig = typeof siteConfig

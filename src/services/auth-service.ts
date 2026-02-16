@@ -89,6 +89,21 @@ export const authService = {
   },
 
   refreshToken: async () => {
-    // Refresh token implementasyonu buraya
+    if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true") {
+      const mockToken = "mock-jwt-token-12345"
+      document.cookie = `token=${mockToken}; path=/; max-age=86400`
+      return { token: mockToken }
+    }
+
+    const response = await api.post<ApiResponse<{ token: string; user?: User }>>(
+      "/auth/refresh",
+      null,
+      {
+        noAuth: true,
+        credentials: "include",
+      }
+    )
+
+    return response.data
   },
 }
