@@ -13,9 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
           <h1 className="text-3xl font-bold text-primary-foreground">{siteConfig.name}</h1>
-          <p className="text-primary-foreground/70 text-lg">
-            {siteConfig.description}
-          </p>
+          <p className="text-primary-foreground/70 text-lg">{siteConfig.description}</p>
         </div>
       </div>
 
